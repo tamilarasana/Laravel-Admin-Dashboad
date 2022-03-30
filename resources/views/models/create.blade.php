@@ -38,7 +38,6 @@ Kalyani Motors
 		                    @endforeach
 					</select>
 				</div>
-
 				<label class="mt-3 mb-3"><b>Title</b></label>
 				<div class="form-group form-floating-label">
 					<input id="inputFloatingLabel"  name ="title" type="text" class="form-control input-border-bottom"  placeholder = "Car Title" required>
@@ -82,9 +81,9 @@ Kalyani Motors
 					<!-- <small class="form-text text-muted">Example block-level help text here.</small> -->
 				</div>
 
-				<!-- <label class="mt-3 mb-3"><b>File </b></label>
+				 <label class="mt-3 mb-3"><b>File </b></label>
 				<div class="form-group">
-					<input type="file"  name="file" id="file" class="form-control @error('file') is-invalid @enderror" >
+					<input type="file"  name="file" id="file" class=" @error('file') is-invalid @enderror" >
 					<div class="invalid-feedback">Please Select your File.</div>
                     <label style="font-size: smaller;color: red;">Format: pdf</label>
                     @if($errors->has('file'))
@@ -92,12 +91,12 @@ Kalyani Motors
                         <li>Oops!  {{$errors->first('file')}}</li>
                     </span>
                 @endif
-				</div> -->
+				</div>
 
 			</div>
 			<div class="card-action">
 				<button class="btn btn-success">Submit</button>
-				 <a href ="{{url('/car')}}" class="btn btn-danger">Cancel</a>
+				 <a href ="{{route('models.index')}}" class="btn btn-danger">Cancel</a>
 			</div>
 		</form>
 	</div>

@@ -23,6 +23,7 @@ Kalyani Motors
 			</li>
 		</ul>
 	</div>
+    <span id="result"></span>
 	<div class="card mb-4">
 		<h6 class="card-header">Edit Car</h6>
 		<!-- <form> -->
@@ -76,10 +77,12 @@ Kalyani Motors
 				<div class="form-group form-floating-label">
 					<input id="inputFloatingLabel"  name ="transmission" value="{{$cars->transmission}}" type="text" class="form-control input-border-bottom" placeholder ="Enter Your Transmission" >
 				</div>
+
                 <label class="mt-3 mb-3"><b>Body</b></label>
 				<div class="form-group form-floating-label">
 					<input id="inputFloatingLabel"  name ="body" value="{{$cars->body}}" type="text" class="form-control input-border-bottom" placeholder ="Enter Your Body" >
 				</div>
+
 				<label class="mt-3 mb-3"><b>About Car</b></label>
 				<div class="form-group form-floating-label">
 					<input id="inputFloatingLabel"  name ="about_car" value="{{$cars->about_car}}" type="text" class="form-control input-border-bottom" placeholder = "About Car" >
@@ -128,7 +131,22 @@ Kalyani Motors
                        <img  src="{{ asset('storage/'.$image->images) }}"width ="70px" height="70px" alt="Image">
                     @endforeach
 				</div>
-
+                <table class="table  table-condensed"  id="user_table">
+                    <thead >
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </table>
+            <br>
+            <center>
+                    <input type="hidden" id="service_data"  value="{{ json_encode($interior) }}">
+                <td>
+                     <button type="button" name="add" id="add" class="btn-sm btn-success">Add</button>
+                </td>
+            </center>
 			</div>
 			<div class="card-action">
 				<button class="btn btn-success">Submit</button>
@@ -165,7 +183,6 @@ Kalyani Motors
                     }
                 });
                 } else {
-
                     $("#model_id").empty();
                     $("#varient_id").empty();
                 }
@@ -203,4 +220,94 @@ Kalyani Motors
     });
 
 </script>
+
+<script>
+    $(document).ready(function(){
+        var verify_data =  JSON.parse($("#service_data").val());
+        if(verify_data == ''){
+            var count = 1;
+            dynamic_field(count);
+        } else {
+            var count = verify_data.length;
+            console.log(verify_data);
+            $.each(verify_data,function(key, value){
+                updatedynamic_field(key+1,value);
+            });
+
+        }
+;
+
+
+        function dynamic_field(number)
+            {
+                html = '<tr>';
+                html += '<td> <label class="mt-3 mb-3"><b>Interior Images</b></label><div class="form-group"><input type="file" id = "+number+" name="data['+number+'][interior_images]" required /></div></td>';
+                html += '<td> <label class="mt-3 mb-3"><b>Tittle</b></label><div class="form-group form-floating-label"> <input type="text" name="data['+number+'][title]"  class="form-control input-border-bottom" placeholder = "Title" required /></div></td>';
+                html += '<td><label class="mt-3 mb-3"><b>Description</b></label><div class="form-group form-floating-label"><input type="text" name="data['+number+'][int_description]" class="form-control input-border-bottom" placeholder="Descripation"required"/></div></td>';
+
+                if(number > 1)
+            {
+                html += '<td><button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
+                $('tbody').append(html);
+            }
+            else
+            {
+                html += '<td></td></tr>';
+                $('tbody').html(html);
+            }
+        }
+
+        function updatedynamic_field(number, data = '')
+            {
+                html = '<tr>';
+                html += '<td> <label class="mt-3 mb-3"><b>Interior Images</b></label><div class="form-group"><input type="file" id = "+number+" name="data['+number+'][interior_images]" required /><img src="{{ asset('storage/') }}"></div></td>';
+                html += '<td> <label class="mt-3 mb-3"><b>Tittle</b></label><div class="form-group form-floating-label"> <input type="text" name="data['+number+'][title]"  class="form-control input-border-bottom"  value = " '+data.title+'" placeholder="Title Name" required />	</div></td>';
+                html += '<td> <label class="mt-3 mb-3"><b>Description</b></label><div class="form-group form-floating-label"> <input  type="text" name="data['+number+'][int_description]"  class="form-control input-border-bottom"  value = "'+data.int_description+' " required "/>	</div></td>';
+            if(number > 1)
+            {
+                html += '<td><button type="button" name="remove" id="" class="btn btn-danger edit_delete_data" data-id="'+data.id+'">Remove</button></td></tr>';
+                $('tbody').append(html);
+            }
+            else
+            {
+                html += '<td></td></tr>';
+                $('tbody').html(html);
+            }
+        }
+
+     $(document).on('click', '#add', function(){
+        count++;
+        dynamic_field(count);
+     });
+
+     $(document).on('click', '.remove', function(){
+        count--;
+        $(this).closest("tr").remove();
+     });
+
+
+     $("body").on("click",'.edit_delete_data',function(){
+        var id = $(this).attr("data-id");
+        let url = '{{route('interior.delete')}}'
+        console.log(url);
+        if(confirm("Are You sure want to delete !")){
+            $.ajax({
+                    url: url + '/' + id,
+                    type: 'DELETE',
+                    dataType: "JSON",
+                    data:{
+                        "id":id,
+                        "_token": "{{ csrf_token() }}"},
+
+                    success: function (data)
+                    {
+                        location.reload();
+                        $('#result').html('<div class="alert alert-success">'+data.success+'</div>');
+                    }
+            });
+        }
+    });
+
+    });
+    </script>
 @endsection

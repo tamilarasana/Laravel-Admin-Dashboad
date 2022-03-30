@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Image;
+use App\Models\Interiorimage;
 use Storage;
 
 class ImageController extends Controller
@@ -24,5 +25,14 @@ class ImageController extends Controller
         $image->delete();
         Storage::delete('/public/'.$image->images);
         return redirect('car')->with('success', 'Image Deleted Successfullly');
+    }
+
+    public  function destroyInteriorImage( $id){
+
+        $interior = Interiorimage::findOrFail($id);
+        $interior->delete();
+        return response()->json([
+            'success'  => 'Data Deleted successfully.'
+           ]);
     }
 }

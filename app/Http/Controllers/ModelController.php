@@ -43,6 +43,9 @@ class ModelController extends Controller
      */
     public function store(Request $request){
 
+        $request->validate([
+        "file" => "required|mimes:pdf",
+    ]);
         $check_postion_exists = $request->position;
         if($check_postion_exists){
             $check_position  = CarModel::where('category_id',$request->category_id )
@@ -54,6 +57,14 @@ class ModelController extends Controller
                     $path=   $request->image->storeAs('model_image',$image,'public');
                     $image = $path;
                 }
+                if($request->hasFile('file')){
+                    $file = $request->file('file');
+                    $extension  = $file->getClientOriginalExtension();
+                    $filename = time().'.'.$extension;
+                    $file->move('uploads/file/',$filename);
+                    $path = 'uploads/file/'.$filename;
+                    $pdffile  = $path;
+                }
                 $model = New CarModel;
                 $model->category_id = $request->category_id;
                 $model->title = $request->title;
@@ -64,6 +75,7 @@ class ModelController extends Controller
                 $model->position = $request->position;
                 $model->description = $request->description;
                 $model->image = $image;
+                $model->file = $pdffile;
                 $model->save();
             }else{
                 return redirect()->back()->with('error', 'Position Already Exists. Please Chanage the Posotion Or Type:)');
@@ -105,58 +117,68 @@ class ModelController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+          "file" => "required|mimes:pdf",
+        ]);
+
        $model = CarModel::findOrFail($id);
        $image = $model ->image;
-       $imagename = Str::random($length = 10);
-        if($request->hasFile('image')){
-            if($image){
-                Storage::delete('/public/'.$image);
-            }
-             $image = $imagename.'_'.time().'.'. request()->image->getClientOriginalExtension();
-             $path=   $request->image->storeAs('model_image',$image,'public');
-              $image = $path;
-        }
-        if($request->has('category_id')){
-           $model->category_id = $request->category_id;
-        }
-        if($request ->has('title')){
-            $model->title = $request->title;
-        }
-        if($request ->has('starting_price')){
-            $model->starting_price = $request->starting_price;
-        }
-        if($request ->has('seo_title')){
-            $model->seo_title = $request->seo_title;
-        }
-        if($request ->has('seo_tag')){
-            $model->seo_tag = $request->seo_tag;
-        }
-        if($request ->has('seo_desc')){
-            $model->seo_desc = $request->seo_desc;
-        }
-        if($request ->has('position')){
-            $model->position = $request->position;
-        }
-        if($request ->has('description')){
-            $model->description = $request->description;
-        }
-        if($request->has('image')){
-            $model->image = $image;
-        }
+       $file = $model->file;
+            $imagename = Str::random($length = 10);
+                if($request->hasFile('image')){
+                    if($image){
+                        Storage::delete('/public/'.$image);
+                    }
+                    $image = $imagename.'_'.time().'.'. request()->image->getClientOriginalExtension();
+                    $path=   $request->image->storeAs('model_image',$image,'public');
+                    $image = $path;
+                }
+                if($request->hasFile('file')){
+                    if(File::exists($file)){
+                    File::delete($file);
+                }
+                    $file = $request->file('file');
+                    $extension  = $file->getClientOriginalExtension();
+                    $filename = time().'.'.$extension;
+                    $file->move('uploads/file/',$filename);
+                    $path = 'uploads/file/'.$filename;
+                    $pdffile  = $path;
+                    $model->file = $pdffile;
 
-        $model->update();
+                }
+                if($request->has('category_id')){
+                $model->category_id = $request->category_id;
+                }
+                if($request ->has('title')){
+                    $model->title = $request->title;
+                }
+                if($request ->has('starting_price')){
+                    $model->starting_price = $request->starting_price;
+                }
+                if($request ->has('seo_title')){
+                    $model->seo_title = $request->seo_title;
+                }
+                if($request ->has('seo_tag')){
+                    $model->seo_tag = $request->seo_tag;
+                }
+                if($request ->has('seo_desc')){
+                    $model->seo_desc = $request->seo_desc;
+                }
+                if($request ->has('position')){
+                    $check_position  = CarModel::where('category_id',$request->category_id )
+                                               ->where('position', $request->position)->get();
+                    if($check_position->isEmpty()){
+                        $model->position = $request->position;
+                    }
+                }
+                if($request ->has('description')){
+                    $model->description = $request->description;
+                }
+                if($request->has('image')){
+                    $model->image = $image;
+                }
 
-        // $model ->update([
-        //     'category_id' => $request->category_id,
-        //     'title' => $request->title,
-        //     'starting_price' => $request->starting_price,
-        //     'seo_title' => $request->seo_title,
-        //     'seo_tag' => $request->seo_tag,
-        //     'seo_desc' => $request->seo_desc,
-        //     'position' => $request->position,
-        //     'description' => $request->description,
-        //     'image' => $image,
-        // ]);
+                $model->update();
             return redirect('models')->with('updated', 'Updated successfully!');
     }
 
@@ -169,6 +191,10 @@ class ModelController extends Controller
     public function destroy($id)
     {
         $model = CarModel::findOrFail($id);
+        $file = $model->file;
+        if(File::exists($file)){
+            File::delete($file);
+        }
         $model->delete();
         Storage::delete('/public/'.$model->image);
         return redirect('models');

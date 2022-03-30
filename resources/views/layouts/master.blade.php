@@ -34,6 +34,9 @@
 	<link rel="stylesheet" href="../assets/css/demo.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> --}}
+
+
 
 </head>
 <body>
@@ -190,6 +193,14 @@
 								<p>Common FAQ</p>
 							</a>
 						</li>
+
+                        <li class="nav-item {{ Request::is('servicefaq') ? 'active' : ''}}">
+                            <a href="{{ route('servicefaq.index') }}">
+								<i class="fas fa-car-crash"></i>
+								<p>Service FAQ</p>
+							</a>
+						</li>
+
 					    <li class="nav-item {{ Request::is('serviceseason') ? 'active' : ''}}">
                             <a href="{{ route('serviceseason.index') }}">
 								<i class="fab fa-mixcloud"></i>
@@ -202,6 +213,21 @@
 								<p>Attach Season Service</p>
 							</a>
 						</li>
+
+                        <li class="nav-item {{ Request::is('servicebanner') ? 'active' : ''}}">
+                            <a href="{{ route('servicebanner.index') }}">
+								<i class="fas fa-layer-group"></i>
+								<p> Service Banner </p>
+							</a>
+						</li>
+
+                        <li class="nav-item {{ Request::is('servicevideo') ? 'active' : ''}}">
+                            <a href="{{ route('servicevideo.index') }}">
+								<i class="fab fa-youtube"></i>
+								<p> Service Video </p>
+							</a>
+						</li>
+
 				     <li class="nav-item {{ Request::is('enquiry') ? 'active' : ''}}">
                             <a href="{{ route('enquiry.index') }}">
 								<i class="fas fa-question"></i>
@@ -224,6 +250,13 @@
                             <a href="{{route('location.index')}}">
 								<i class="fas fa-map-marker-alt"></i>
 								<p>Location</p>
+							</a>
+						</li>
+
+                        <li class="nav-item {{ Request::is('blogpage') ? 'active' : ''}}">
+                            <a href="{{route('blogpage.index')}}">
+								<i class="fab fa-blogger-b"></i>
+								<p>Blog Pages</p>
 							</a>
 						</li>
 					</ul>
@@ -253,6 +286,7 @@
     <script src="//cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
 
 	<script >
 		$(document).ready(function() {

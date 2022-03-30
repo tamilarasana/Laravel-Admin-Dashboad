@@ -16,10 +16,10 @@ class UpdateSeasonController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $updateseason = DB::table('product_seasons')
-                            ->join('seasons','product_seasons.season_id','=','seasons.id')
-                            ->join('products','product_seasons.product_id','=','products.id')
-                            ->select('product_seasons.id','seasons.season_name','products.name','position')
+        $updateseason = DB::table('product_season')
+                            ->join('seasons','product_season.season_id','=','seasons.id')
+                            ->join('products','product_season.product_id','=','products.id')
+                            ->select('product_season.id','seasons.season_name','products.name','position')
                             ->get();
         return view('update-season.index',['updateseason'=>$updateseason]);
     }
@@ -47,7 +47,7 @@ class UpdateSeasonController extends Controller
     {
         $check_postion_exists = $request->position;
         if($check_postion_exists){
-            $check_position = DB::table('product_seasons')
+            $check_position = DB::table('product_season')
                                 ->where('season_id',$request->season_id )
                                 ->where('position', $request->position)->get();
             if($check_position->isEmpty()){
@@ -55,7 +55,7 @@ class UpdateSeasonController extends Controller
                 $updateseason['season_id'] = $request->season_id;
                 $updateseason['product_id'] = $request->product_id;
                 $updateseason['position'] = $request->position;
-                DB::table('product_seasons')->Insert($updateseason);
+                DB::table('product_season')->Insert($updateseason);
             }else{
                 return redirect()->back()->with('error', 'Position Already Exists. Please Chanage the Posotion Or Type:)');
              }
@@ -105,7 +105,7 @@ class UpdateSeasonController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('product_seasons')->where('id',$id)->delete();
+        DB::table('product_season')->where('id',$id)->delete();
         return redirect('update-season');
     }
 }

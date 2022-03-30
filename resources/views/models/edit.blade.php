@@ -78,9 +78,9 @@ Kalyani Motors
 
 				</div>
 
-			<!-- 	<label class="mt-3 mb-3"><b>File </b></label>
+				<label class="mt-3 mb-3"><b>File </b></label>
 				<div class="form-group">
-					<input type="file"  name="file" id="file" class="form-control @error('file') is-invalid @enderror" >
+					<input type="file"  name="file" id="file" class="@error('file') is-invalid @enderror" >
 					 <iframe src="{{ asset($model->file) }}" frameborder="1"
                         allowfullscreen="true"  width="100" height="100"></iframe>
                         <label style="font-size: smaller;color: red;">Format: pdf, Max: 2MB</label>
@@ -89,7 +89,7 @@ Kalyani Motors
                             <li>Oops!  {{$errors->first('file')}}</li>
                         </span>
                     @endif
-				</div> -->
+				</div>
 			</div>
 			<div class="card-action">
 				<button class="btn btn-success">Submit</button>
@@ -100,4 +100,9 @@ Kalyani Motors
 </div>
 @endsection
 @section('scripts')
+@if(Session::has('error'))
+    <script>
+        toastr.success("{!! Session::get('error')!!}");
+    </script>
+@endif
 @endsection

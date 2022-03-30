@@ -60,19 +60,19 @@ Kalyani Motors
                 </div>
                 <label class="mt-3 mb-3"><b>FaceBook</b></label>
 				<div class="form-group form-floating-label">
-					<input id="inputFloatingLabel"  name ="facebook_id" type="text" class="form-control input-border-bottom" placeholder ="Enter Your Facebook Url" required>
+					<input id="inputFloatingLabel"  name ="facebook_id" type="url" class="form-control input-border-bottom" placeholder ="Enter Your Facebook Url" required>
 				</div>
                 <label class="mt-3 mb-3"><b>Instagram</b></label>
 				<div class="form-group form-floating-label">
-					<input id="inputFloatingLabel"  name ="instagram_id" type="text" class="form-control input-border-bottom" placeholder ="Enter Your Instagram Id" required>
+					<input id="inputFloatingLabel"  name ="instagram_id" type="url" class="form-control input-border-bottom" placeholder ="Enter Your Instagram Id" required>
 				</div>
                 <label class="mt-3 mb-3"><b>YouTube</b></label>
 				<div class="form-group form-floating-label">
-					<input id="inputFloatingLabel"  name ="youtube_id" type="text" class="form-control input-border-bottom" placeholder ="Enter Your YouTube Id" required>
+					<input id="inputFloatingLabel"  name ="youtube_id" type="url" class="form-control input-border-bottom" placeholder ="Enter Your YouTube Id" required>
 				</div>
                 <label class="mt-3 mb-3"><b>Twitter</b></label>
 				<div class="form-group form-floating-label">
-					<input id="inputFloatingLabel"  name ="twitter_id" type="text" class="form-control input-border-bottom" placeholder ="Enter Your Twitter Id" required>
+					<input id="inputFloatingLabel"  name ="twitter_id" type="url" class="form-control input-border-bottom" placeholder ="Enter Your Twitter Id" required>
 				</div>
 
 				<label class="mt-3 mb-3"><b>Phone Number</b></label>

@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::resource('serviceseason', ServiceseasonController::class);
+// Route::resource('serviceseason', ServiceseasonController::class);
 
-Route::resource('location', Locationcontroller::class);
+// Route::resource('location', Locationcontroller::class);
 

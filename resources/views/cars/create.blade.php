@@ -112,18 +112,31 @@ Kalyani Motors
 					<input id="inputFloatingLabel"  name ="colour_code2" type="text" class="form-control input-border-bottom" placeholder ="Enter Your Color Code Two" >
 				</div>
 
-				<label class="mt-3 mb-3"><b>Image</b></label>
+				<label class="mt-3 mb-3"><b>Images</b></label>
 				<div class="form-group">
 					<input type="file"  name="images[]"  multiple="multiple" >
 				</div>
-			</div>
 
 
-			</div>
-			<div class="card-action">
-				<button class="btn btn-success">Submit</button>
-				 <a href ="{{url('/banner')}}" class="btn btn-danger">Cancel</a>
-			</div>
+                    <table class="table  table-condensed"  id="user_table">
+                        <thead >
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </table>
+                <br>
+                <center>
+                 <td><button type="button" name="add" id="add" class="btn-sm btn-success">Add</button>
+                  </td>
+                </center>
+            </div>
+                <div class="card-action">
+                    <button class="btn btn-success">Submit</button>
+                    <a href ="{{route('car.index')}}" class="btn btn-danger">Cancel</a>
+                </div>
 		</form>
 	</div>
 </div>
@@ -192,4 +205,42 @@ Kalyani Motors
     });
 
 </script>
+
+<script>
+    $(document).ready(function(){
+            var count = 1;
+            dynamic_field(count);
+        function dynamic_field(number)
+            {
+                html = '<tr>';
+                html += '<td> <label class="mt-3 mb-3"><b>Interior Images</b></label><div class="form-group"><input type="file" id = "+number+" name="data['+number+'][interior_images]" required /></div></td>';
+                html += '<td> <label class="mt-3 mb-3"><b>Tittle</b></label><div class="form-group form-floating-label"> <input type="text" name="data['+number+'][title]"  class="form-control input-border-bottom" placeholder="Title" required /></div></td>';
+                html += '<td><label class="mt-3 mb-3"><b>Description</b></label><div class="form-group form-floating-label"><input type="text" name="data['+number+'][int_description]" class="form-control input-border-bottom" placeholder="Descripation"required"/></div></td>';
+            if(number > 1)
+            {
+                html += '<td><button type="button" name="remove" id="" class="btn btn-danger remove">Remove</button></td></tr>';
+                $('tbody').append(html);
+            }
+            else
+            {
+                html += '<td></td></tr>';
+                $('tbody').html(html);
+            }
+        }
+
+
+     $(document).on('click', '#add', function(){
+        count++;
+        dynamic_field(count);
+     });
+
+     $(document).on('click', '.remove', function(){
+        count--;
+        $(this).closest("tr").remove();
+     });
+
+    });
+    </script>
+
+
 @endsection

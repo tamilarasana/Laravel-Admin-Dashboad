@@ -123,9 +123,6 @@ $(document).ready(function(){
                 $('#dynamic_form').on('submit', function(event){
                     event.preventDefault();
                     var id=$("#service_id").val();
-                    // alert(id);
-
-                    // var id = $(this).attr("data-id");
                     console.log(id);
                     $.ajax({
                         url:'{{ route("servicelist.store") }}',

@@ -26,10 +26,10 @@ class ServiceListController extends Controller
     public function storeService(Request $request)
     {
         $service_id = $request->id;
-         $basket_data = Servicelist::where('service_id',$service_id)->exists();
-         if($basket_data)
+         $service_type = Servicelist::where('service_id',$service_id)->exists();
+         if($service_type)
          {
-            $basket_data = Servicelist::where('service_id',$service_id)->delete();
+            $service_type = Servicelist::where('service_id',$service_id)->delete();
          }
             $input= $request->except('_token');
             Servicelist::insert($input['data']);

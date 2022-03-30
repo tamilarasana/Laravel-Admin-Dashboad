@@ -50,6 +50,11 @@ class Product extends Model
         return $this->belongsTo(Varient::class);
     }
 
+    public function interiorimages(){
+        return $this->hasMany(Interiorimage::class);
+    }
+
+
 
 
 

@@ -22,6 +22,10 @@ use App\Http\Controllers\PolicybannerimageController;
 use App\Http\Controllers\ServiceseasonController;
 use App\Http\Controllers\AttachseasonserviceController;
 use App\Http\Controllers\Locationcontroller;
+use App\Http\Controllers\ServicebannerController;
+use App\Http\Controllers\ServicevideoController;
+use App\Http\Controllers\ServicefaqController;
+use App\Http\Controllers\BlogpageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +74,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('enquirybannerimg', Enquirybannerimagecontroller::class);
     Route::resource('policybannerimg', PolicybannerimageController::class);
     Route::resource('location', Locationcontroller::class);
+    Route::resource('servicebanner', ServicebannerController::class);
+    Route::resource('servicevideo', ServicevideoController::class);
+    Route::resource('servicefaq', ServicefaqController::class);
+    Route::resource('blogpage', BlogpageController::class);
+
 
     Route::get('/specification.index', [SpecificationController::class,'index'])->name('specification.index');
     Route::get('/specification.create', [SpecificationController::class,'create'])->name('specification.create');
@@ -82,8 +91,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('enquiry', [Enquirycontroller::class,'index'])->name("enquiry.index");
     Route::get('export',[EnquiryController::class,'export'])->name("export");
 
-    Route::get('image',[ImageController::class,'index'])->name('image.index');
-    Route::get('image/create',[ImageController::class,'create'])->name('image.create');
+    // Route::get('image',[ImageController::class,'index'])->name('image.index');
+    // Route::get('image/create',[ImageController::class,'create'])->name('image.create');
     Route::get('/destroy/image/{image?}', [ImageController::class,'destroyImage'])->name('destroy.image');
+    // Route::get('/destroy/interiorimages/{image?}', [ImageController::class,'destroyInteriorImage'])->name('destroy.interiorimage');
+    Route::delete('interior/delete/{id?}', [ImageController::class,'destroyInteriorImage'])->name('interior.delete');
+
+
 
 });

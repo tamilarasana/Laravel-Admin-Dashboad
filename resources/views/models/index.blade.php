@@ -45,7 +45,7 @@ Kalyani Motors
                         <th>Starting Price</th>
                         <th>Position</th>
 						<th>Image</th>
-						<!-- <th>File</th> -->
+						<th>File</th>
 
 						<th style="width: 10%">Action</th>
 					</tr>
@@ -65,7 +65,7 @@ Kalyani Motors
 								No Image
 							@endif
 						</td>
-						      <!-- <td><a href="{{$value->file}}">File</a></td> -->
+						    <td><a href="{{$value->file}}">File</a></td>
 						<td>
 							<div class="form-button-action">
 								<a href="{{route('models.edit',$value->id)}}"class="btn-sm btn-info" data-original-title="Edit Task" data-toggle="tooltip" ><i class="far fa-edit"></i></a>&nbsp;

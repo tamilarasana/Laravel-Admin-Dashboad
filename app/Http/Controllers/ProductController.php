@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Models\Image;
-use App\Models\CarModel;
-use App\Models\Category;
-use App\Models\Varient;
+use DB;
+use Str;
 use File;
 use Storage;
-use Str;
-use DB;
+use Exception;
+use App\Models\Image;
+use App\Models\Product;
+use App\Models\Varient;
+use App\Models\CarModel;
+use App\Models\Category;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use App\Models\Interiorimage;
 
 class ProductController extends Controller
 {
@@ -29,7 +32,8 @@ class ProductController extends Controller
     }
 
     public function store(Request $request){
-        // $cars = new Product;
+
+        //  dd($request->all());
         $validated = $request->validate([
             'category_id' => 'required',
             'car_model_id' => 'required',
@@ -49,15 +53,14 @@ class ProductController extends Controller
         $car['color_name2'] = $request->color_name2;
         $car['colour_code'] = $request->colour_code;
         $car['colour_code2'] = $request->colour_code2;
+
         $cars = Product::create($car);
 
         $imagename = Str::random($length = 10);
-          if($request->has('images'))
-           {
+          if($request->has('images')){
              $files = $request->file('images');
-
               foreach ($files as $key => $file)
-               {
+              {
                   $image = $imagename.'_'.$key .'_'.time().'.'. $file->getClientOriginalExtension();
                   $path =  $file->storeAs('images',$image,'public');
                   $data['product_id'] = $cars->id;
@@ -65,9 +68,59 @@ class ProductController extends Controller
                   $car = Image::create($data);
                 }
             }
-        return redirect('car')->with('success', 'Created successfully!');
 
-    }
+            $product_id = $cars->id;
+            $input = $request->except('_token');
+            $test = $input['data'];
+             $imagename = Str::random($length = 10);
+            foreach($test as $key => $tes){
+                try{
+                    $imge =  $tes['interior_images'];
+                    // dd($imge);
+                    if($imge){
+                        $banner_image = $imagename.'_'.$key.'_'.time().'.'.$imge->getClientOriginalExtension();
+                        $path=   $imge->storeAs('interiorimages',$banner_image,'public');
+                        $loc_image = $path;
+                    }
+                   $tes['product_id'] = $product_id;
+                   $tes['interior_images'] = $loc_image;
+                    $res = Interiorimage::insert($tes);
+                }catch (Exception $e){
+                    dd($e);
+                }
+
+            }
+
+        //    $dt = Interiorimage::insert($test);
+        //    dd($dt);
+
+
+
+            // $product_id = $cars->id;
+            // $title = $request->title;
+            // $imagename = Str::random($length = 10);
+            // if($request->hasFile('interior_images')){
+            //     $files = $request->file('interior_images');
+            //     foreach ($files as $key => $file)
+            //     {
+            //         $image = $imagename.'_'.$key .'_'.time().'.'. $file->getClientOriginalExtension();
+            //         $path =  $file->storeAs('interiorimages',$image,'public');
+            //         $loc_image = $path;
+            //     }
+            //  }
+            // for($i=0; $i<count($title); $i++){
+            //     $data=array(
+            //         'product_id' => $product_id,
+            //         'title' => $title[$i],
+            //         'interiorimages' => $loc_image,
+            //     );
+            // $insert[] = $data;
+            // }
+            // Interiorimage::insert($insert);
+
+            return redirect('car')->with('success', 'Created successfully!');
+        }
+
     public function show($id)
     {
         //
@@ -78,10 +131,13 @@ class ProductController extends Controller
         $models = CarModel::all();
         $category = Category::all();
         $varient = Varient::all();
-        return view('cars.edit',['cars' => $cars,'models' => $models ,'varient' => $varient, 'category' => $category]);
+        $interior = Interiorimage::where('product_id',$cars->id)->get();
+        // dd($interior);
+        return view('cars.edit',['cars' => $cars,'models' => $models ,'varient' => $varient, 'category' => $category ,  'interior' => $interior]);
     }
 
     public function update(Request $request, $id){
+        // dd($request->all());
         $validated = $request->validate([
             'category_id' => 'required',
             'car_model_id' => 'required',
@@ -120,6 +176,35 @@ class ProductController extends Controller
                 ]);
            }
         }
+
+        $interior = Interiorimage::where('product_id',$cars->id)->exists();
+        // dd($interior);
+        if($interior)
+        {
+           $exists_int = Interiorimage::where('product_id',$cars->id)->delete();
+        }
+        $product_id = $cars->id;
+        $input = $request->except('_token');
+        $test = $input['data'];
+         $imagename = Str::random($length = 10);
+        foreach($test as $key => $tes){
+            try{
+                $imge =  $tes['interior_images'];
+                // dd($imge);
+                if($imge){
+                    $banner_image = $imagename.'_'.$key.'_'.time().'.'.$imge->getClientOriginalExtension();
+                    $path=   $imge->storeAs('interiorimages',$banner_image,'public');
+                    $loc_image = $path;
+                }
+               $tes['product_id'] = $product_id;
+               $tes['interior_images'] = $loc_image;
+                $res = Interiorimage::insert($tes);
+            }catch (Exception $e){
+                dd($e);
+            }
+
+        }
+
         return redirect('car')->with('updated', 'Updated successfully!');
     }
 
@@ -130,6 +215,13 @@ class ProductController extends Controller
             Storage::delete('/public/'.$img->images);
         }
         Image::where('product_id',$cars->id)->delete();
+
+        $interiorimg_del = Interiorimage::where('product_id',$cars->id)->get();
+        foreach($interiorimg_del as $img) {
+            Storage::delete('/public/'.$img->interiorimages);
+        }
+
+        Interiorimage::where('product_id',$cars->id)->delete();
         $cars->delete();
         return redirect('car');
     }
@@ -147,6 +239,5 @@ class ProductController extends Controller
         $model = Varient ::select('var_title','id')->where('car_model_id',$id)->get();
         return response()->json($model);
     }
-
 
 }
